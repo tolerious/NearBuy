@@ -45,4 +45,4 @@ def f(c=""):
     timestamp = datetime.datetime.now().strftime("%F %R %S")
     with cd("/Users/fengxiaolong/APICloud/workspace/NearBuy"):
         # run("git stash")
-        local("git commit -am 'update ..., timestamp: %s, comment: %s' && git push origin master" %(timestamp,c))
+        local("git commit -am 'update ..., timestamp: %s, comment: %s' && git push origin master" %(timestamp, c))
