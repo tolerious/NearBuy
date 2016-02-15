@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+		<meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+		<title>Home page</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=7LisciNlZKhsymjVwLGHBtDI"></script>
+		<style>
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0px;
+				padding: 0px
+			}
+			#con {
+				/*margin: 10px;*/
+				font-size: 24px;
+				height: 100%;
+			}
+			ul {
+				margin-bottom: 10px;
+			}
+			ul li {
+				margin: 5px 10px;
+				padding: 5px;
+				color: #000;
+				word-wrap: break-word;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="con"></div>
+		<!--<div id='sys-info'></div>-->
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		function create_info_window(info_dic) {
+			var opts = {
+				width : 250, // 信息窗口宽度
+				height : 100, // 信息窗口高度
+				title : info_dic.title // 信息窗口标题
+			}
+			var infoWindow = new BMap.InfoWindow(info_dic.content, opts);
+			// 创建信息窗口对象
+			map.openInfoWindow(infoWindow, map.getCenter());
+		}
+
+		function marker_click() {
+			var dic = {
+				"title" : "王小二",
+				"content" : "纯手工打造戒指"
+			};
+			create_info_window(dic);
+		}
+
+		function draw_map(param_dic) {
+			map = new BMap.Map("con");
+			// 创建地图实例
+			var point = new BMap.Point(param_dic.lon, param_dic.lat);
+			// 创建点坐标
+			map.centerAndZoom(point, 15);
+			//===============================================
+			//增加地图上的一些控件
+			map.addControl(new BMap.NavigationControl());
+			map.addControl(new BMap.OverviewMapControl());
+			//			map.addControl(new BMap.ScaleControl());//显示比例尺
+			//			map.addControl(new BMap.MapTypeControl());//地图类型，地图，卫星，三维
+			//			map.addControl(new BMap.CopyrightControl());
+			map.addControl(new BMap.GeolocationControl());
+			//===============================================
+			var marker = new BMap.Marker(point);
+			map.addOverlay(marker);
+			//			marker.enableDragging();//打开marker拖拽的功能
+			marker.addEventListener("click", function() {
+				//				alert("click");
+				marker_click();
+			});
+			// 打开信息窗口
+		}
+
+		apiready = function() {
+			var baiduLocation = api.require('baiduLocation');
+			baiduLocation.getLocation(function(ret, err) {
+				var sta = ret.status;
+				lat = ret.latitude;
+				lon = ret.longitude;
+				var t = ret.timestamp;
+				if (sta) {
+					var str = '经度：' + lon + '<br>';
+					str += '纬度：' + lat + '<br>';
+					str += '更新时间：' + t + '<br>';
+					//					api.alert({
+					//						msg : str
+					//					});
+					var param_dic = {
+						"lat" : lat,
+						"lon" : lon
+					};
+					draw_map(param_dic);
+				} else {
+					api.alert({
+						msg : err.msg
+					});
+				}
+			});
+		};
+	</script>
+</html>
