@@ -43,6 +43,6 @@ def j(b,c=""):
 
 def f(c="天气不好，不想写评论行不行？"):
     timestamp = datetime.datetime.now().strftime("%F %R:%S")
-    with cd("/Users/fengxiaolong/APICloud/workspace/NearBuy"):
+    with settings(warn_only=True):
         # run("git stash")
         local("git commit -am 'update ..., timestamp: %s, comment: %s' && git push origin master" %(timestamp, c))
