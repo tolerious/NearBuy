@@ -38,7 +38,7 @@
 	</body>
 	<script type="text/javascript" src="../script/api.js"></script>
 	<script type="text/javascript">
-		function create_info_window(info_dic) {
+		function create_info_window(x, y, info_dic) {
 			var opts = {
 				width : 250, // 信息窗口宽度
 				height : 100, // 信息窗口高度
@@ -46,18 +46,32 @@
 			}
 			var infoWindow = new BMap.InfoWindow(info_dic.content, opts);
 			// 创建信息窗口对象
-			map.openInfoWindow(infoWindow, map.getCenter());
+			//			map.openInfoWindow(infoWindow, map.getCenter());
+			map.openInfoWindow(infoWindow, new BMap.Point(x, y));
 		}
 
-		function marker_click() {
+		function marker_click(x, y) {
 			var dic = {
 				"title" : "王小二",
 				"content" : "纯手工打造戒指"
 			};
-			create_info_window(dic);
+			create_info_window(x, y, dic);
 		}
 
-		function draw_map(param_dic) {
+		function draw_poi(x, y) {//在地图上画点
+			var temp_point = new BMap.Point(x, y);
+			var temp_marker = new BMap.Marker(temp_point);
+			map.addOverlay(temp_marker);
+			poi_event_listener(x, y, temp_marker);
+		}
+
+		function poi_event_listener(x, y, poi_obj) {
+			poi_obj.addEventListener("click", function() {
+				marker_click(x, y);
+			});
+		}
+
+		function draw_map(param_dic) {//地图主函数
 			map = new BMap.Map("con");
 			// 创建地图实例
 			var point = new BMap.Point(param_dic.lon, param_dic.lat);
@@ -73,11 +87,17 @@
 			map.addControl(new BMap.GeolocationControl());
 			//===============================================
 			var marker = new BMap.Marker(point);
+			x_point = param_dic.lon + 0.004;
+			y_point = param_dic.lat + 0.007;
+			xx_point = param_dic.lon - 0.003;
+			yy_point = param_dic.lat - 0.005;
 			map.addOverlay(marker);
+			draw_poi(x_point, y_point);
+			draw_poi(xx_point, yy_point);
 			//			marker.enableDragging();//打开marker拖拽的功能
 			marker.addEventListener("click", function() {
 				//				alert("click");
-				marker_click();
+				marker_click(param_dic.lon, param_dic.lat);
 			});
 			// 打开信息窗口
 		}
