@@ -60,7 +60,7 @@
 			<div id="main"></div>
 			<div id="footer">
 				<div class="pure-g">
-					<div class="pure-u-1-5" onclick="map_icon_click();">
+					<div class="pure-u-1-5" onclick="map_icon_click('1');">
 						<img src="./image/bottom-map-icon.png" style="width:56px;height: 56px">
 					</div>
 					<div class="pure-u-1-5" onclick="search_icon_click();">
@@ -81,11 +81,54 @@
 	</body>
 	<script type="text/javascript" src="./script/api.js"></script>
 	<script type="text/javascript">
-		function map_icon_click() {}
-		function search_icon_click() { alert("search icon clicked");}
-		function camera_icon_click() {}
-		function message_icon_click() {}
-		function personal_center_icon_click() {}
+		has_click_bottom_map_icon = false;
+		function map_icon_click(number) {
+			switch (number) {
+				case "1":
+					if (!has_click_bottom_map_icon) {
+						api.openFrame({
+							name : 'main',
+							url : 'html/product-list-page.html',
+							bounces : true,
+							rect : {
+								x : 0,
+								y : headerH,
+								w : 'auto',
+								h : frameH
+							}
+						});
+						has_click_bottom_map_icon = true;
+					} else {
+						api.openFrame({
+							name : 'main',
+							url : 'html/main.html',
+							bounces : true,
+							rect : {
+								x : 0,
+								y : headerH,
+								w : 'auto',
+								h : frameH
+							}
+						});
+						has_click_bottom_map_icon = false;
+					}
+					break;
+			}
+		}
+
+		function search_icon_click() {
+			alert("search icon clicked");
+		}
+
+		function camera_icon_click() {
+		}
+
+		function message_icon_click() {
+		}
+
+		function personal_center_icon_click() {
+		}
+
 		apiready = function() {
 			//输出Log，Log将显示在APICloud Studio控制台
 			var header = $api.byId('header');
@@ -94,11 +137,11 @@
 			//动态计算header的高度，因iOS7+和Android4.4+上支持沉浸式效果，
 			//因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度
 			//其中，IOS状态栏高度为20px，Android为25px
-			var headerH = $api.offset(header).h;
+			headerH = $api.offset(header).h;
 			//footer高度为css样式中声明的30px
-			var footerH = 56;
+			footerH = 56;
 			//frame的高度为当前window高度减去header和footer的高度
-			var frameH = api.winHeight - headerH - footerH;
+			frameH = api.winHeight - headerH - footerH;
 			api.openFrame({
 				name : 'main',
 				url : 'html/main.html',
